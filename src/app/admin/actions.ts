@@ -221,7 +221,7 @@ export async function adminSimulateDraw(formData: FormData) {
   if (subError) throw new Error(subError.message)
 
   const subscriptions = (activeSubscriptions ?? []) as SubscriptionRow[]
-  const uniqueUserIds = [...new Set(subscriptions.map((row) => row.user_id))]
+  const uniqueUserIds: string[] = Array.from(new Set(subscriptions.map((row) => row.user_id)))
 
   const { data: scores, error: scoreError } = await admin
     .from('scores')
@@ -304,7 +304,9 @@ export async function adminPublishDrawResults(formData: FormData) {
 
   if (subError) throw new Error(subError.message)
 
-  const participantIds = [...new Set((activeSubscriptions ?? []).map((row: { user_id: string }) => row.user_id))]
+  const participantIds: string[] = Array.from(
+    new Set((activeSubscriptions ?? []).map((row: { user_id: string }) => row.user_id))
+  )
 
   const { data: scoreRows, error: scoreError } = await admin
     .from('scores')
