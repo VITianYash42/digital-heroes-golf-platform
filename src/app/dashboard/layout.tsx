@@ -5,8 +5,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="font-bold text-lg">Charity Golf // Dashboard</div>
         <div className="flex gap-4">
           <a href="/dashboard" className="hover:text-blue-300">Overview</a>
-          <a href="/dashboard/scores" className="hover:text-blue-300">Scores</a>
-          <a href="/dashboard/settings" className="hover:text-blue-300">Settings</a>
+          <a href="/admin" className="hover:text-blue-300">Admin</a>
         </div>
       </nav>
       {children}

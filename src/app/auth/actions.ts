@@ -26,6 +26,23 @@ function toAuthMessage(errorMessage: string) {
   return errorMessage
 }
 
+async function getPostAuthRedirectPath(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+) {
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .maybeSingle()
+
+  if (profile?.role === 'administrator') {
+    return '/admin'
+  }
+
+  return '/dashboard'
+}
+
 export async function login(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
@@ -41,7 +58,16 @@ export async function login(formData: FormData) {
     return redirect(`/login?message=${message}`)
   }
 
-  return redirect('/dashboard')
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return redirect('/dashboard')
+  }
+
+  const destination = await getPostAuthRedirectPath(supabase, user.id)
+  return redirect(destination)
 }
 
 export async function signup(formData: FormData) {
@@ -93,7 +119,16 @@ export async function signup(formData: FormData) {
           })
 
           if (!loginError) {
-            return redirect('/dashboard')
+            const {
+              data: { user },
+            } = await supabase.auth.getUser()
+
+            if (!user) {
+              return redirect('/dashboard')
+            }
+
+            const destination = await getPostAuthRedirectPath(supabase, user.id)
+            return redirect(destination)
           }
         }
       }
@@ -115,7 +150,8 @@ export async function signup(formData: FormData) {
     return redirect(`/login?message=${message}`)
   }
 
-  return redirect('/dashboard')
+  const destination = await getPostAuthRedirectPath(supabase, userResult.user.id)
+  return redirect(destination)
 }
 
 export async function signout() {

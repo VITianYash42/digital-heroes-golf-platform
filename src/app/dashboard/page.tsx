@@ -18,6 +18,10 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .maybeSingle()
 
+  if (profile?.role === 'administrator') {
+    redirect('/admin')
+  }
+
   // 3) Latest subscription with charity
   const { data: subscriptionRows } = await supabase
     .from('subscriptions')
