@@ -18,6 +18,18 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .maybeSingle()
 
+  if (!profile) {
+    return (
+      <div className="mx-auto mt-16 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
+        <h1 className="text-xl font-bold">Profile Setup Incomplete</h1>
+        <p className="mt-2 text-sm">
+          Your account is authenticated, but no profile row was found in the `profiles` table for this user.
+          This blocks dashboard flows. Ask an admin to create your profile entry in Supabase.
+        </p>
+      </div>
+    )
+  }
+
   if (profile?.role === 'administrator') {
     redirect('/admin')
   }

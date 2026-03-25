@@ -164,6 +164,12 @@ export default function DashboardClient({
                   ))
                 )}
               </select>
+              {charities.length === 0 && (
+                <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                  Checkout is currently disabled because no active charities are configured yet.
+                  Ask admin to add at least one active charity in Admin -&gt; Charity Management.
+                </p>
+              )}
             </div>
 
             <div>
